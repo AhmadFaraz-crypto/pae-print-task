@@ -7,22 +7,38 @@ export class CatStore {
   cats: CatImages[];
   errors: string;
   success: string;
+  collections: CatImages[];
   constructor() {
     this.cats = [];
     this.errors = '';
     this.success = '';
+    this.collections = [];
     makeAutoObservable(this);
   }
 
   setCats = (cat: any) => (this.cats = cat);
 
-  setError = (err: any) => (this.errors = err);
+  setCollections = (collection: any) => (this.collections = collection);
 
-  setSuccess = (succ: any) => (this.success = succ);
+  setError = (err: string) => (this.errors = err);
+
+  setSuccess = (succ: string) => (this.success = succ);
 
 
   get getCats() {
     return this.cats;
+  }
+
+  get getError() {
+    return this.errors;
+  }
+
+  get getSuccess() {
+    return this.success;
+  }
+
+  get getCollections() {
+    return this.collections;
   }
 
   async getImagesData(searchParams: Object) {

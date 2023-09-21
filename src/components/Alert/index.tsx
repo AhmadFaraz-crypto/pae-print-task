@@ -12,6 +12,7 @@ import type { HTMLAttributes } from "react";
 type AlertProps = HTMLAttributes<HTMLDivElement> & {
   type: "success" | "error" | "warning" | "info";
   dismissible?: boolean;
+  onClick?: any;
 };
 
 export const Alert = ({
@@ -19,6 +20,7 @@ export const Alert = ({
   type,
   className,
   dismissible = true,
+  onClick
 }: AlertProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -65,7 +67,7 @@ export const Alert = ({
           <p className={classNames("text-sm font-medium")}>{children}</p>
         </div>
         {dismissible && (
-          <div className="ml-auto pl-3">
+          <div className="ml-auto pl-3" onClick={onClick}>
             <div className="-mx-1.5 -my-1.5">
               <button
                 onClick={() => setIsVisible(false)}

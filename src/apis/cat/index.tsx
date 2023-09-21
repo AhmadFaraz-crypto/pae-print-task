@@ -2,7 +2,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { client } from "..";
-import { CatImagesResponse } from "../types";
+import { CatImages, CatImagesResponse } from "../types";
 
 export const getCatImagesSchema = z.object({
   page: zfd.numeric(z.number().optional()),
@@ -14,11 +14,6 @@ export const getCatImagesSchema = z.object({
   search: zfd.text(z.string().optional()),
   category_ids: zfd.repeatableOfType(zfd.numeric().optional()),
   breed_ids: zfd.repeatableOfType(zfd.numeric().optional()),
-});
-
-export const postCatImageUploadSchema = z.object({
-  file: zfd.file().optional(),
-  sub_id: zfd.text(z.string().optional()),
 });
 
 export const getCatImagesSchemaValidator = withZod(getCatImagesSchema);
@@ -33,12 +28,17 @@ export const deleteCatImage = (id: string) => {
   return client.delete<CatImagesResponse, any>(`images/${id}`);
 };
 
+export const postCatImageUploadSchema = z.object({
+  file: zfd.file().optional(),
+  sub_id: zfd.text(z.string().optional()),
+});
+
 export const postCatImageUploadSchemaValidator = withZod(postCatImageUploadSchema);
 
 export const uploadCatImage = (
-  data: any
+  data: z.infer<typeof postCatImageUploadSchema>
 ) => {
-  return client.post<CatImagesResponse, any>(`images/upload`, data, {
+  return client.post<CatImages, any>(`images/upload`, data, {
     headers: {
       "x-api-key":
         "live_w2OxOkjMuTnaz3ZFHMzxLXUcFMudw0p8uXLxdVCMhWs1LsNNdkjtKVsimWnoi845",
