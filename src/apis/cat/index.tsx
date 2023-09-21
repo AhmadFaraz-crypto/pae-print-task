@@ -33,7 +33,9 @@ export const postCatImageUploadSchema = z.object({
   sub_id: zfd.text(z.string().optional()),
 });
 
-export const postCatImageUploadSchemaValidator = withZod(postCatImageUploadSchema);
+export const postCatImageUploadSchemaValidator = withZod(
+  postCatImageUploadSchema
+);
 
 export const uploadCatImage = (
   data: z.infer<typeof postCatImageUploadSchema>
@@ -42,7 +44,27 @@ export const uploadCatImage = (
     headers: {
       "x-api-key":
         "live_w2OxOkjMuTnaz3ZFHMzxLXUcFMudw0p8uXLxdVCMhWs1LsNNdkjtKVsimWnoi845",
-        "Content-Type": "multipart/form-data"
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const getCatImageSchema = z.object({
+  size: zfd.text(z.enum(["small", "med", "full"]).optional()),
+  search: zfd.text(z.string().optional()),
+});
+
+export const getCatImageSchemaValidator = withZod(getCatImageSchema);
+
+export const getCatImage = (
+  id: string,
+  params: z.infer<typeof getCatImageSchema>
+) => {
+  return client.get<CatImages, any>(`images/${id}`, {
+    params,
+    headers: {
+      "x-api-key":
+        "live_w2OxOkjMuTnaz3ZFHMzxLXUcFMudw0p8uXLxdVCMhWs1LsNNdkjtKVsimWnoi845",
     },
   });
 };

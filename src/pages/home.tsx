@@ -1,12 +1,12 @@
 "use client";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useCatsStore } from "../providers/rootStoreProvider";
 import { formatApiData } from "../utils/format-cats";
 import { unProxify } from "@/utils/unProxify";
 import { Alert } from "@/components/Alert";
-import { ImagesList } from "@/components/ImagesList";
+import ImagesList from "@/components/ImagesList";
 import Link from "next/link";
 
 type props = {
@@ -24,13 +24,10 @@ const Home = observer(function Home({ request }: props) {
     store.getImagesData(request?.nextUrl.searchParams || {});
   }, []);
 
-  function deleteImage(id: string) {
-    store.setCats(unProxify(store.deleteCatData(id)));
-  }
-
   useEffect(() => {
     const Images = unProxify(store.getCats);
     if (Images?.length) {
+      console.log("25.media.tumblr.com", Images)
       setCatImagesGrid(formatApiData(unProxify(store.getCats)));
     }
   }, [store.getCats]);
@@ -84,8 +81,6 @@ const Home = observer(function Home({ request }: props) {
         catImagesGrid={catImagesGrid}
         setToggle={setToggle}
         toggle={toggle}
-        deleteImage={deleteImage}
-        addToCollection={store.setCollections}
       />
       {store.getError && (
         <Alert

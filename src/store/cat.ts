@@ -1,4 +1,10 @@
-import { getCatImagesSchemaValidator, getCatsImages, uploadCatImage } from "@/apis/cat";
+import {
+  getCatImage,
+  getCatImageSchemaValidator,
+  getCatImagesSchemaValidator,
+  getCatsImages,
+  uploadCatImage,
+} from "@/apis/cat";
 import { CatImages } from "@/apis/types";
 import { makeAutoObservable } from "mobx";
 import { NextResponse } from "next/server";
@@ -10,13 +16,13 @@ export class CatStore {
   collections: CatImages[];
   constructor() {
     this.cats = [];
-    this.errors = '';
-    this.success = '';
+    this.errors = "";
+    this.success = "";
     this.collections = [];
     makeAutoObservable(this);
   }
 
-  setCats = (cat: any) => (this.cats = cat);
+  setCats = (cat: CatImages[]) => (this.cats = cat);
 
   setCollections = (collection: CatImages) => {
     this.collections.push(collection);
@@ -26,7 +32,6 @@ export class CatStore {
   setError = (err: string) => (this.errors = err);
 
   setSuccess = (succ: string) => (this.success = succ);
-
 
   get getCats() {
     return this.cats;
@@ -50,10 +55,8 @@ export class CatStore {
     );
 
     if (error) {
-      return NextResponse.json(
-        { message: "Invalid search params" },
-        { status: 400 }
-      );
+      this.setError("Invalid params");
+      return NextResponse.json({ message: "Invalid params" }, { status: 400 });
     }
 
     try {
@@ -65,18 +68,46 @@ export class CatStore {
       this.setCats(response.data);
     } catch (error: any) {
       console.error(error);
-      this.setError(error?.response?.data)
+      this.setError(error?.response?.data);
     }
   }
-  
+
+  async changeImageSize(id: string, size: string) {
+    const { data, error } = await getCatImageSchemaValidator.validate({
+      size: size,
+    });
+
+    if (error) {
+      this.setError("Invalid params");
+      return NextResponse.json({ message: "Invalid params" }, { status: 400 });
+    }
+
+    const replica = this.cats;
+
+    try {
+      const response = await getCatImage(id, data);
+      this.setCats([]);
+      replica.map((ele, index) => {
+        if (ele.id === id) {
+          replica[index] = response.data;
+          console.log("Called", JSON.stringify(replica[index]))
+        }
+      });
+      this.setCats([...replica])
+      this.setSuccess("Size Uploaded successfully");
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
   async uploadImage(data: any) {
     try {
       const response = await uploadCatImage(data);
-      const result = [response.data]
+      const result = [response.data];
       this.setCats([...this.cats, ...result]);
       this.setSuccess("Image Uploaded successfully");
     } catch (error: any) {
-      this.setError(error?.response?.data)
+      this.setError(error?.response?.data);
     }
   }
 

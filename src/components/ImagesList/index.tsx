@@ -6,22 +6,27 @@ import {
   ArrowDownTrayIcon,
   Cog8ToothIcon,
 } from "@heroicons/react/24/solid";
+import { observer } from "mobx-react-lite";
+import { useCatsStore } from "@/providers/rootStoreProvider";
+import { unProxify } from "@/utils/unProxify";
 
 type props = {
   setToggle: (val: boolean) => void;
   toggle: boolean;
   catImagesGrid: CatImages[];
-  deleteImage: (val: string) => void;
-  addToCollection: (obj: CatImages) => void;
 };
 
-export function ImagesList({
+const ImageList = observer(function Home({
   setToggle,
   toggle,
   catImagesGrid,
-  deleteImage,
-  addToCollection,
 }: props) {
+  const store = useCatsStore();
+
+  function deleteImage(id: string) {
+    store.setCats(unProxify(store.deleteCatData(id)));
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       {catImagesGrid?.map((cat: any, index: any) => {
@@ -42,7 +47,7 @@ export function ImagesList({
                       title="Add to collection"
                       className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-2 mt-3"
                       aria-hidden="true"
-                      onClick={() => addToCollection(d)}
+                      onClick={() => store.setCollections(d)}
                     />
                     <TrashIcon
                       onClick={() => deleteImage(d.id)}
@@ -55,7 +60,47 @@ export function ImagesList({
                       className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-3 mt-3"
                       aria-hidden="true"
                     />
-                    <Setting setToggle={setToggle} toggle={toggle} />
+                    <div className="relative">
+                      <Cog8ToothIcon
+                        onClick={() => setToggle(!toggle)}
+                        title="Download"
+                        className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-3 mt-3"
+                        aria-hidden="true"
+                      />
+                      <div
+                        id="dropdown"
+                        className={`${
+                          !toggle && "hidden"
+                        } z-10 absolute top-16 -mt-3 -mr-11 right-16 bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700`}
+                      >
+                        <ul
+                          className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                          aria-labelledby="dropdownDefaultButton"
+                        >
+                          <li
+                            onClick={() => store.changeImageSize(d.id, "small")}
+                          >
+                            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                              Small
+                            </p>
+                          </li>
+                          <li
+                            onClick={() => store.changeImageSize(d.id, "med")}
+                          >
+                            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                              Medium
+                            </p>
+                          </li>
+                          <li
+                            onClick={() => store.changeImageSize(d.id, "full")}
+                          >
+                            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                              Full
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -65,50 +110,6 @@ export function ImagesList({
       })}
     </div>
   );
-}
+});
 
-function Setting({
-  setToggle,
-  toggle,
-}: {
-  setToggle: (val: boolean) => void;
-  toggle: boolean;
-}) {
-  return (
-    <div className="relative">
-      <Cog8ToothIcon
-        onClick={() => setToggle(!toggle)}
-        title="Download"
-        className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-3 mt-3"
-        aria-hidden="true"
-      />
-      <div
-        id="dropdown"
-        className={`${
-          !toggle && "hidden"
-        } z-10 absolute top-16 -mt-3 -mr-11 right-16 bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700`}
-      >
-        <ul
-          className="py-2 text-sm text-gray-700 dark:text-gray-200"
-          aria-labelledby="dropdownDefaultButton"
-        >
-          <li>
-            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-              Small
-            </p>
-          </li>
-          <li>
-            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-              Medium
-            </p>
-          </li>
-          <li>
-            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-              Large
-            </p>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
-}
+export default ImageList;

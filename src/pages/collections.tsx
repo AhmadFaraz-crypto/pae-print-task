@@ -6,16 +6,12 @@ import { useCatsStore } from "../providers/rootStoreProvider";
 import { formatApiData } from "../utils/format-cats";
 import { unProxify } from "@/utils/unProxify";
 import { Alert } from "@/components/Alert";
-import { ImagesList } from "@/components/ImagesList";
+import ImagesList from "@/components/ImagesList";
 
 const Collections = observer(function Collections() {
   const store = useCatsStore();
   const [catImagesGrid, setCatImagesGrid] = useState<any[]>([]);
   const [toggle, setToggle] = useState<boolean>(false);
-
-  function deleteImage(id: string) {
-    store.setCats(unProxify(store.deleteCatData(id)));
-  }
 
   useEffect(() => {
     const Images = unProxify(store.getCollections);
@@ -40,8 +36,6 @@ const Collections = observer(function Collections() {
           catImagesGrid={catImagesGrid}
           setToggle={setToggle}
           toggle={toggle}
-          deleteImage={deleteImage}
-          addToCollection={store.setCollections}
         />
       ) : (
         <p className="text-center">Data not Found.</p>
