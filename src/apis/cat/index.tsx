@@ -28,17 +28,8 @@ export const deleteCatImage = (id: string) => {
   return client.delete<CatImagesResponse, any>(`images/${id}`);
 };
 
-export const postCatImageUploadSchema = z.object({
-  file: zfd.file().optional(),
-  sub_id: zfd.text(z.string().optional()),
-});
-
-export const postCatImageUploadSchemaValidator = withZod(
-  postCatImageUploadSchema
-);
-
 export const uploadCatImage = (
-  data: z.infer<typeof postCatImageUploadSchema>
+  data: any
 ) => {
   return client.post<CatImages, any>(`images/upload`, data, {
     headers: {
