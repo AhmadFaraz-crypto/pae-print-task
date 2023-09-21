@@ -14,11 +14,13 @@ export class CatStore {
   errors: string;
   success: string;
   collections: CatImages[];
+  searchParam: string;
   constructor() {
     this.cats = [];
     this.errors = "";
     this.success = "";
     this.collections = [];
+    this.searchParam = "";
     makeAutoObservable(this);
   }
 
@@ -33,8 +35,10 @@ export class CatStore {
 
   setSuccess = (succ: string) => (this.success = succ);
 
+  setSearchParam = (param: string) => (this.searchParam = param);
+
   get getCats() {
-    return this.cats;
+    return this.cats.filter(item => (this.searchParam ? item.tag?.toLowerCase().includes(this.searchParam.toLowerCase()) : true)).map(cat => cat);
   }
 
   get getError() {
@@ -46,7 +50,11 @@ export class CatStore {
   }
 
   get getCollections() {
-    return this.collections;
+    return this.collections.filter(item => (this.searchParam ? item.tag?.toLowerCase().includes(this.searchParam.toLowerCase()) : true)).map(cat => cat);;
+  }
+
+  get totalCollections() {
+    return this.collections.length;
   }
 
   async getImagesData(searchParams: Object) {
@@ -90,14 +98,22 @@ export class CatStore {
       replica.map((ele, index) => {
         if (ele.id === id) {
           replica[index] = response.data;
-          console.log("Called", JSON.stringify(replica[index]))
         }
       });
-      this.setCats([...replica])
+      this.setCats([...replica]);
       this.setSuccess("Size Uploaded successfully");
     } catch (error: any) {
       console.error(error);
     }
+  }
+
+  addTag(id: string, tag: string) {
+    const updatedData = this.cats.map((cat) => ({
+      ...cat,
+      tag: cat.id === id ? tag : cat.tag,
+    }));
+    console.log("Called", updatedData)
+    this.setCats([...updatedData]);
   }
 
   async uploadImage(data: any) {

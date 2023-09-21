@@ -1,5 +1,4 @@
 "use client";
-import { NextRequest } from "next/server";
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useCatsStore } from "../providers/rootStoreProvider";
@@ -11,11 +10,9 @@ import ImagesList from "@/components/ImagesList";
 const Collections = observer(function Collections() {
   const store = useCatsStore();
   const [catImagesGrid, setCatImagesGrid] = useState<any[]>([]);
-  const [toggle, setToggle] = useState<boolean>(false);
 
   useEffect(() => {
-    const Images = unProxify(store.getCollections);
-    if (Images?.length) {
+    if (store.getCollections) {
       setCatImagesGrid(formatApiData(unProxify(store.getCollections)));
     }
   }, [store.getCollections]);
@@ -31,12 +28,19 @@ const Collections = observer(function Collections() {
 
   return (
     <main className="min-h-screen p-16">
-      {catImagesGrid.length ? (
-        <ImagesList
-          catImagesGrid={catImagesGrid}
-          setToggle={setToggle}
-          toggle={toggle}
+      <div className="flex justify-end items-center mb-5">
+        <p className="mr-5">Total Collections: {store.totalCollections}</p>
+        <input
+          onChange={(e) => store.setSearchParam(e.target.value)}
+          className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          placeholder="Search by tag name"
         />
+      </div>
+      {catImagesGrid.length ? (
+        <>
+          <ImagesList catImagesGrid={catImagesGrid} />
+        </>
       ) : (
         <p className="text-center">Data not Found.</p>
       )}

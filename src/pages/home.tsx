@@ -15,8 +15,7 @@ type props = {
 
 const Home = observer(function Home({ request }: props) {
   const store = useCatsStore();
-  const [catImagesGrid, setCatImagesGrid] = useState<any[]>([]);
-  const [toggle, setToggle] = useState<boolean>(false);
+  const [catImagesGrid, setCatImagesGrid] = useState<any>([]);
   const [imageUpload, setImageUpload] = useState<any>(null);
   const docInput = useRef<HTMLInputElement>(null);
 
@@ -25,10 +24,9 @@ const Home = observer(function Home({ request }: props) {
   }, []);
 
   useEffect(() => {
-    const Images = unProxify(store.getCats);
-    if (Images?.length) {
-      console.log("25.media.tumblr.com", Images)
-      setCatImagesGrid(formatApiData(unProxify(store.getCats)));
+    if (store.getCats) {
+      const data = formatApiData(unProxify(store.getCats));
+      setCatImagesGrid(data);
     }
   }, [store.getCats]);
 
@@ -53,6 +51,12 @@ const Home = observer(function Home({ request }: props) {
   return (
     <main className="min-h-screen p-16">
       <div className="flex justify-end mb-5">
+        <input
+          onChange={(e) => store.setSearchParam(e.target.value)}
+          className="shadow appearance-none border rounded w-1/4 mr-5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          placeholder="Search by tag name"
+        />
         <Link
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
           href={"/collections"}
@@ -77,11 +81,7 @@ const Home = observer(function Home({ request }: props) {
           accept="image/*"
         />
       </div>
-      <ImagesList
-        catImagesGrid={catImagesGrid}
-        setToggle={setToggle}
-        toggle={toggle}
-      />
+      <ImagesList catImagesGrid={catImagesGrid} />
       {store.getError && (
         <Alert
           type="error"
