@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useCatsStore } from "../providers/rootStoreProvider";
 import { formatApiData } from "../utils/format-cats";
-import { unProxify } from "@/utils/unProxify";
 import { Alert } from "@/components/Alert";
 import ImagesList from "@/components/ImagesList";
+import { toJS } from "mobx";
 
 const Collections = observer(function Collections() {
   const store = useCatsStore();
@@ -13,7 +13,7 @@ const Collections = observer(function Collections() {
 
   useEffect(() => {
     if (store.getCollections) {
-      setCatImagesGrid(formatApiData(unProxify(store.getCollections)));
+      setCatImagesGrid(formatApiData(toJS(store.getCollections)));
     }
   }, [store.getCollections]);
 
@@ -24,6 +24,7 @@ const Collections = observer(function Collections() {
         store.setSuccess("");
       }, 3000);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.getError, store.getSuccess]);
 
   return (

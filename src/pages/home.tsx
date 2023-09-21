@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useCatsStore } from "../providers/rootStoreProvider";
 import { formatApiData } from "../utils/format-cats";
-import { unProxify } from "@/utils/unProxify";
 import { Alert } from "@/components/Alert";
 import ImagesList from "@/components/ImagesList";
 import Link from "next/link";
+import { toJS } from "mobx";
 
 type props = {
   request?: NextRequest;
@@ -21,11 +21,12 @@ const Home = observer(function Home({ request }: props) {
 
   useEffect(() => {
     store.getImagesData(request?.nextUrl.searchParams || {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (store.getCats) {
-      const data = formatApiData(unProxify(store.getCats));
+      const data = formatApiData(toJS(store.getCats));
       setCatImagesGrid(data);
     }
   }, [store.getCats]);
@@ -37,6 +38,7 @@ const Home = observer(function Home({ request }: props) {
       };
       store.uploadImage(obj);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageUpload]);
 
   useEffect(() => {
@@ -46,6 +48,7 @@ const Home = observer(function Home({ request }: props) {
         store.setSuccess("");
       }, 3000);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.getError, store.getSuccess]);
 
   return (

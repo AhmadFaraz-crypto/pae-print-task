@@ -8,10 +8,10 @@ import {
 } from "@heroicons/react/24/solid";
 import { observer } from "mobx-react-lite";
 import { useCatsStore } from "@/providers/rootStoreProvider";
-import { unProxify } from "@/utils/unProxify";
 import { useState } from "react";
 import { sizes } from "@/constants/size";
 import { Tags } from "@/constants/tags";
+import { toJS } from "mobx";
 
 type props = {
   catImagesGrid: CatImages[];
@@ -23,7 +23,7 @@ const ImageList = observer(function Home({ catImagesGrid }: props) {
   const [openTagDropdown, setOpenTagDropdown] = useState<boolean>(false);
 
   function deleteImage(id: string) {
-    store.setCats(unProxify(store.deleteCatData(id)));
+    store.setCats(toJS(store.deleteCatData(id)));
   }
 
   return (

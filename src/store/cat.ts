@@ -24,7 +24,7 @@ export class CatStore {
     makeAutoObservable(this);
   }
 
-  setCats = (cat: CatImages[]) => (this.cats = cat);
+  setCats = (cat: any) => (this.cats = cat);
 
   setCollections = (collection: CatImages) => {
     this.collections.push(collection);
