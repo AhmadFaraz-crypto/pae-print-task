@@ -29,7 +29,7 @@ export const deleteCatImage = (id: string) => {
 };
 
 export const uploadCatImage = (
-  data: any
+  data: {file: any}
 ) => {
   return client.post<CatImages, any>(`images/upload`, data, {
     headers: {
