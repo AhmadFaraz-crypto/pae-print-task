@@ -18,7 +18,10 @@ export class CatStore {
 
   setCats = (cat: any) => (this.cats = cat);
 
-  setCollections = (collection: any) => (this.collections = collection);
+  setCollections = (collection: CatImages) => {
+    this.collections.push(collection);
+    this.setSuccess("Image added to collections");
+  };
 
   setError = (err: string) => (this.errors = err);
 
@@ -60,7 +63,7 @@ export class CatStore {
         limit: data?.limit ?? 80,
       });
       this.setCats(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       this.setError(error?.response?.data)
     }
@@ -72,7 +75,7 @@ export class CatStore {
       const result = [response.data]
       this.setCats([...this.cats, ...result]);
       this.setSuccess("Image Uploaded successfully");
-    } catch (error) {
+    } catch (error: any) {
       this.setError(error?.response?.data)
     }
   }

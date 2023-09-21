@@ -12,6 +12,7 @@ type props = {
   toggle: boolean;
   catImagesGrid: CatImages[];
   deleteImage: (val: string) => void;
+  addToCollection: (obj: CatImages) => void;
 };
 
 export function ImagesList({
@@ -19,6 +20,7 @@ export function ImagesList({
   toggle,
   catImagesGrid,
   deleteImage,
+  addToCollection,
 }: props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -40,6 +42,7 @@ export function ImagesList({
                       title="Add to collection"
                       className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-2 mt-3"
                       aria-hidden="true"
+                      onClick={() => addToCollection(d)}
                     />
                     <TrashIcon
                       onClick={() => deleteImage(d.id)}
@@ -52,41 +55,7 @@ export function ImagesList({
                       className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-3 mt-3"
                       aria-hidden="true"
                     />
-                    <div className="relative">
-                      <Cog8ToothIcon
-                        onClick={() => setToggle(!toggle)}
-                        title="Download"
-                        className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-3 mt-3"
-                        aria-hidden="true"
-                      />
-                      <div
-                        id="dropdown"
-                        className={`${
-                          !toggle && "hidden"
-                        } z-10 absolute top-16 -mt-3 -mr-11 right-16 bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700`}
-                      >
-                        <ul
-                          className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                          aria-labelledby="dropdownDefaultButton"
-                        >
-                          <li>
-                            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                              Small
-                            </p>
-                          </li>
-                          <li>
-                            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                              Medium
-                            </p>
-                          </li>
-                          <li>
-                            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                              Large
-                            </p>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                    <Setting setToggle={setToggle} toggle={toggle} />
                   </div>
                 </div>
               </div>
@@ -94,6 +63,52 @@ export function ImagesList({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function Setting({
+  setToggle,
+  toggle,
+}: {
+  setToggle: (val: boolean) => void;
+  toggle: boolean;
+}) {
+  return (
+    <div className="relative">
+      <Cog8ToothIcon
+        onClick={() => setToggle(!toggle)}
+        title="Download"
+        className="p-1 h-8 w-8 bg-white text-black cursor-pointer rounded-md mr-3 mt-3"
+        aria-hidden="true"
+      />
+      <div
+        id="dropdown"
+        className={`${
+          !toggle && "hidden"
+        } z-10 absolute top-16 -mt-3 -mr-11 right-16 bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700`}
+      >
+        <ul
+          className="py-2 text-sm text-gray-700 dark:text-gray-200"
+          aria-labelledby="dropdownDefaultButton"
+        >
+          <li>
+            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Small
+            </p>
+          </li>
+          <li>
+            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Medium
+            </p>
+          </li>
+          <li>
+            <p className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Large
+            </p>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }

@@ -7,12 +7,13 @@ import { formatApiData } from "../utils/format-cats";
 import { unProxify } from "@/utils/unProxify";
 import { Alert } from "@/components/Alert";
 import { ImagesList } from "@/components/ImagesList";
+import Link from "next/link";
 
 type props = {
   request?: NextRequest;
 };
 
-export const Home = observer(function Home({ request }: props) {
+const Home = observer(function Home({ request }: props) {
   const store = useCatsStore();
   const [catImagesGrid, setCatImagesGrid] = useState<any[]>([]);
   const [toggle, setToggle] = useState<boolean>(false);
@@ -55,6 +56,12 @@ export const Home = observer(function Home({ request }: props) {
   return (
     <main className="min-h-screen p-16">
       <div className="flex justify-end mb-5">
+        <Link
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+          href={"/collections"}
+        >
+          Collections
+        </Link>
         <button
           onClick={() => docInput?.current?.click()}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -78,6 +85,7 @@ export const Home = observer(function Home({ request }: props) {
         setToggle={setToggle}
         toggle={toggle}
         deleteImage={deleteImage}
+        addToCollection={store.setCollections}
       />
       {store.getError && (
         <Alert
@@ -100,3 +108,5 @@ export const Home = observer(function Home({ request }: props) {
     </main>
   );
 });
+
+export default Home;
