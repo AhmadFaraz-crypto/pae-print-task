@@ -53,22 +53,22 @@ const Home = observer(function Home({ request }: props) {
 
   return (
     <main className="min-h-screen p-16">
-      <div className="flex justify-end mb-5">
+      <div className="flex flex-wrap items-center md:justify-end sm:justify-center mb-5">
         <input
           onChange={(e) => store.setSearchParam(e.target.value)}
-          className="shadow appearance-none border rounded w-1/4 mr-5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded md:w-1/4 sm:w-full mr-5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           placeholder="Search by tag name"
         />
         <Link
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-3 py-2 px-4 rounded mr-4"
           href={"/collections"}
         >
           Collections
         </Link>
         <button
           onClick={() => docInput?.current?.click()}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 h-10 text-white font-bold py-2 px-4 rounded"
         >
           Add new Image
         </button>
