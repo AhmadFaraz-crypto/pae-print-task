@@ -1,3 +1,4 @@
+import { config } from "@/config";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
@@ -28,13 +29,10 @@ export const deleteCatImage = (id: string) => {
   return client.delete<CatImagesResponse, any>(`images/${id}`);
 };
 
-export const uploadCatImage = (
-  data: {file: any}
-) => {
+export const uploadCatImage = (data: { file: any }) => {
   return client.post<CatImages, any>(`images/upload`, data, {
     headers: {
-      "x-api-key":
-        "live_w2OxOkjMuTnaz3ZFHMzxLXUcFMudw0p8uXLxdVCMhWs1LsNNdkjtKVsimWnoi845",
+      "x-api-key": config.apiKey,
       "Content-Type": "multipart/form-data",
     },
   });
@@ -54,8 +52,7 @@ export const getCatImage = (
   return client.get<CatImages, any>(`images/${id}`, {
     params,
     headers: {
-      "x-api-key":
-        "live_w2OxOkjMuTnaz3ZFHMzxLXUcFMudw0p8uXLxdVCMhWs1LsNNdkjtKVsimWnoi845",
+      "x-api-key": config.apiKey,
     },
   });
 };

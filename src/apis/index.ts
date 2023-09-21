@@ -1,8 +1,9 @@
+import { config } from "@/config";
 import axios from "axios";
 import qs from "qs";
 
 export const client = axios.create({
-  baseURL: "https://api.thecatapi.com/v1/",
+  baseURL: config.apiUrl,
   paramsSerializer: {
     serialize: (params) =>
       qs.stringify(params, {
