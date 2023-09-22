@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useCatsStore } from "../providers/rootStoreProvider";
-import { formatApiData } from "../utils/format-cats";
 import { Alert } from "@/components/Alert";
 import ImagesList from "@/components/ImagesList";
 import Link from "next/link";
@@ -26,8 +25,7 @@ const Home = observer(function Home({ request }: props) {
 
   useEffect(() => {
     if (store.getCats) {
-      const data = formatApiData(toJS(store.getCats));
-      setCatImagesGrid(data);
+      setCatImagesGrid(toJS(store.getCats));
     }
   }, [store.getCats]);
 

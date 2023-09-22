@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useCatsStore } from "../providers/rootStoreProvider";
-import { formatApiData } from "../utils/format-cats";
 import { Alert } from "@/components/Alert";
 import ImagesList from "@/components/ImagesList";
 import { toJS } from "mobx";
@@ -13,7 +12,7 @@ const Collections = observer(function Collections() {
 
   useEffect(() => {
     if (store.getCollections) {
-      setCatImagesGrid(formatApiData(toJS(store.getCollections)));
+      setCatImagesGrid(toJS(store.getCollections));
     }
   }, [store.getCollections]);
 
